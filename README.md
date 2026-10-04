@@ -44,6 +44,28 @@ Open `http://localhost:5173`.
 - Candidate application history and status tracking
 - Recruiter application status updates
 
+## Planned differentiators to add next
+
+1. AI job-fit score
+   - Show a skill match percentage for each job.
+   - Explain why a candidate is a good match.
+   - Help candidates understand where they stand quickly.
+
+2. Portfolio + GitHub validation
+   - Let candidates add GitHub links, projects, and achievements.
+   - Display portfolio evidence beyond the resume.
+   - Give recruiters better signals before interview calls.
+
+3. Skill-gap analyzer
+   - Compare a candidate's experience with the role requirements.
+   - Recommend courses, certifications, or practical tasks.
+   - Turn job hunting into a growth journey.
+
+4. Referral and warm-intro system
+   - Support referral requests and recruiter-to-candidate warm intros.
+   - Increase trust and engagement for both sides.
+   - Make the portal feel more like a talent network than a simple listing site.
+
 ## API
 
 - `GET /api/jobs?query=java` searches jobs

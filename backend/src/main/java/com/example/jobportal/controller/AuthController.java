@@ -17,16 +17,16 @@ public class AuthController {
     private final UserRepository users; private final PasswordEncoder encoder; private final AuthenticationManager auth; private final JwtService jwt;
     public AuthController(UserRepository users, PasswordEncoder encoder, AuthenticationManager auth, JwtService jwt) { this.users = users; this.encoder = encoder; this.auth = auth; this.jwt = jwt; }
     public record Credentials(@Email @NotBlank String email, @NotBlank @Size(min = 6) String password) {}
-    public record Registration(@Email @NotBlank String email, @NotBlank @Size(min = 6) String password, @NotBlank String name, @Pattern(regexp = "CANDIDATE|RECRUITER") String role) {}
-    public record AuthResponse(String token, String name, String email, String role) {}
+    public record Registration(@Email @NotBlank String email, @NotBlank @Size(min = 6) String password, @NotBlank String name, @Pattern(regexp = "CANDIDATE|RECRUITER") String role, String skills, String githubUrl, String portfolioUrl) {}
+    public record AuthResponse(String token, String name, String email, String role, String skills, String githubUrl, String portfolioUrl) {}
     @PostMapping("/register") public ResponseEntity<?> register(@Valid @RequestBody Registration request) {
         if (users.existsByEmail(request.email())) return ResponseEntity.badRequest().body("Email is already registered");
-        User user = users.save(new User(request.email(), encoder.encode(request.password()), request.name(), request.role()));
+        User user = users.save(new User(request.email(), encoder.encode(request.password()), request.name(), request.role(), request.skills() == null ? "" : request.skills(), request.githubUrl() == null ? "" : request.githubUrl(), request.portfolioUrl() == null ? "" : request.portfolioUrl()));
         return ResponseEntity.ok(response(user));
     }
     @PostMapping("/login") public AuthResponse login(@Valid @RequestBody Credentials request) {
         auth.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
         return response(users.findByEmail(request.email()).orElseThrow());
     }
-    private AuthResponse response(UserDetails details) { User user = (User) details; return new AuthResponse(jwt.generate(user), user.getName(), user.getUsername(), user.getRole()); }
+    private AuthResponse response(UserDetails details) { User user = (User) details; return new AuthResponse(jwt.generate(user), user.getName(), user.getUsername(), user.getRole(), user.getSkills(), user.getGithubUrl(), user.getPortfolioUrl()); }
 }
